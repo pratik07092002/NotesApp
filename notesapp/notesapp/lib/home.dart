@@ -116,28 +116,37 @@ Provider.of<NotesProvider>(context ,listen: false).addlist(Newnote);
         child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
       itemBuilder: (BuildContext context, int index) { 
         notemod currentnote = notespro.notes[index];
-        return Container(
-          child: Column(
-
-            children: [
-            Text(currentnote.title! , style: TextStyle( 
-              color: Colors.blue[500],fontSize: 28 ,
-               fontWeight: FontWeight.w900 ,
-                fontStyle: FontStyle.italic),
-                maxLines: 1, overflow: TextOverflow.ellipsis,
-                ),
-            SizedBox(height: 3,),
-            Text(currentnote.Description! ,
-             style: TextStyle(color: Colors.blue[300] ,fontSize: 16,
-              fontStyle: FontStyle.normal ), maxLines: 3, overflow: TextOverflow.ellipsis,),
-
-            ],
-          ),
-          margin: EdgeInsets.all(3),
+        return GestureDetector(
+          onLongPress: (){
+            
+           
+          },
+          onTap: (){
+            Size(20, 10);
+          },
+          child: Container(
+            child: Column(
           
-          decoration: BoxDecoration(
-            color: Colors.grey[800],
-            border: Border.all(color: Colors.green ,width: 3 , style: BorderStyle.solid)
+              children: [
+              Text(currentnote.title! , style: TextStyle( 
+                color: Colors.blue[500],fontSize: 28 ,
+                 fontWeight: FontWeight.w900 ,
+                  fontStyle: FontStyle.italic),
+                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                  ),
+              SizedBox(height: 3,),
+              Text(currentnote.Description! ,
+               style: TextStyle(color: Colors.blue[300] ,fontSize: 16,
+                fontStyle: FontStyle.normal ), maxLines: 3, overflow: TextOverflow.ellipsis,),
+          
+              ],
+            ),
+            margin: EdgeInsets.all(3),
+            
+            decoration: BoxDecoration(
+              color: Colors.blueGrey[900],
+              border: Border.all(color: Colors.green ,width: 3 , style: BorderStyle.solid)
+            ),
           ),
         );   },
         itemCount: notespro.notes.length,

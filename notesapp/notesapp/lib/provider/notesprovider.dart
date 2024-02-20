@@ -11,6 +11,14 @@ notes.add(note);
 notifyListeners();
 
 }
-void deletelist(){}
-void updatelist(){}
+void deletelist(notemod note){
+  int indexofnote = notes.indexOf(notes.firstWhere((element) => element.id == note.id));
+  notes.removeAt(indexofnote);
+  notifyListeners();
+}
+void updatelist(notemod note){
+  int indexofnote = notes.indexOf(notes.firstWhere((element) => element.id == note.id));
+  notes[indexofnote] = note;
+  notifyListeners();
+}
 }
