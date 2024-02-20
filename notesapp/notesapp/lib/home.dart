@@ -117,18 +117,46 @@ Provider.of<NotesProvider>(context ,listen: false).addlist(Newnote);
       itemBuilder: (BuildContext context, int index) { 
         notemod currentnote = notespro.notes[index];
         return GestureDetector(
+          onTap: (){
+
+            BoxDecoration(
+              color: Colors.blueGrey[900],
+              border: Border.all(color: Colors.blue ,width: 3 , style: BorderStyle.solid)
+            );
+          },
           onLongPress: (){
-            
+           
+           showDialog(context: context, builder: (context){
+          
+            return AlertDialog(
+              alignment: Alignment.bottomCenter,
+              
+              backgroundColor: Colors.black,
+              content: Column(
+              
+                
+                mainAxisSize:MainAxisSize.min,
+
+                children: [
+                  ListTile(title: Text("Details", style: TextStyle(color: Colors.green),),trailing: Icon(Icons.info),iconColor: Colors.green, ),
+                  ListTile(title: Text("Delete", style: TextStyle(color: Colors.green),),trailing: Icon(Icons.delete),iconColor: Colors.green,)
+
+                ],
+              ),
+            );
+           });
+          
+          
            
           },
-          onTap: (){
-            Size(20, 10);
-          },
+          
           child: Container(
             child: Column(
           
               children: [
               Text(currentnote.title! , style: TextStyle( 
+                
+                
                 color: Colors.blue[500],fontSize: 28 ,
                  fontWeight: FontWeight.w900 ,
                   fontStyle: FontStyle.italic),
@@ -137,6 +165,7 @@ Provider.of<NotesProvider>(context ,listen: false).addlist(Newnote);
               SizedBox(height: 3,),
               Text(currentnote.Description! ,
                style: TextStyle(color: Colors.blue[300] ,fontSize: 16,
+               
                 fontStyle: FontStyle.normal ), maxLines: 3, overflow: TextOverflow.ellipsis,),
           
               ],
