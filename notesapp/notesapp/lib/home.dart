@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:notesapp/addnote.dart';
 import 'package:notesapp/models/notemodel.dart';
 import 'package:notesapp/provider/notesprovider.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +7,9 @@ import 'package:uuid/uuid.dart';
 //import 'package:notesapp/addnote.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final notemod? note;
+ final bool isUpdate; 
+  const HomePage({super.key , required this.isUpdate,  this.note});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -16,15 +19,27 @@ class _HomePageState extends State<HomePage> {
 TextEditingController HeadingNote = TextEditingController();
 TextEditingController ContentNote = TextEditingController();
 
+
+void ListMaker(){
+notemod Newnote = notemod(
+  id: Uuid().v1(),
+  userId: "Pratik@gmail.com",
+  name: "Pratik",
+  title: HeadingNote.text,
+  Description: ContentNote.text,
+  CreatedOn:DateTime.now()
+);
+Provider.of<NotesProvider>(context ,listen: false).addlist(Newnote);
+}
 void DisplayDialogue(){
   showDialog(context: context, builder: (context){
   //  FloatingActionButton(onPressed: (){}, child: Icon(Icons.check),);
     return AlertDialog(
-      backgroundColor: Colors.black
-      
-      ,
-      
-      title: Text("Add Note", style: TextStyle(color: Colors.blue , ),),
+      backgroundColor: Colors.black,
+      title:   Text(
+        
+        (widget.isUpdate == true) ? "Update" :
+         "AddNote", style: TextStyle(color: Colors.blue , ),),
       
       content: Column(
         
@@ -36,6 +51,7 @@ void DisplayDialogue(){
   autofocus: true,
   decoration: InputDecoration(
     labelText: "Heading",
+    
     labelStyle : TextStyle(color: Colors.blue , fontStyle: FontStyle.normal),
     focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: Colors.green)
@@ -72,10 +88,15 @@ void DisplayDialogue(){
 ),
 SizedBox(height: 5,),
     FloatingActionButton(onPressed: (){
+
+      if(widget.isUpdate == true){
+       //update_list();
+
+      }else{
       ListMaker();
-      setState(() {
-        
-      });
+
+      }
+      
       Navigator.pop(context);
     }, child: Icon(Icons.check),)       
           
@@ -88,18 +109,16 @@ SizedBox(height: 5,),
   });
   
 }
-void ListMaker(){
-notemod Newnote = notemod(
-  id: Uuid().v1(),
-  userId: "Pratik@gmail.com",
-  name: "Pratik",
-  title: HeadingNote.text,
-  Description: ContentNote.text,
-  CreatedOn:DateTime.now()
-);
-Provider.of<NotesProvider>(context ,listen: false).addlist(Newnote);
-}
 
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if(widget.isUpdate == true){
+HeadingNote.text = widget.note!.title!;
+ContentNote.text = widget.note!.title!;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     NotesProvider notespro = Provider.of<NotesProvider>(context);
@@ -119,10 +138,7 @@ Provider.of<NotesProvider>(context ,listen: false).addlist(Newnote);
         return GestureDetector(
           onTap: (){
 
-            BoxDecoration(
-              color: Colors.blueGrey[900],
-              border: Border.all(color: Colors.blue ,width: 3 , style: BorderStyle.solid)
-            );
+           //details
           },
           onLongPress: (){
            
@@ -138,8 +154,24 @@ Provider.of<NotesProvider>(context ,listen: false).addlist(Newnote);
                 mainAxisSize:MainAxisSize.min,
 
                 children: [
-                  ListTile(title: Text("Details", style: TextStyle(color: Colors.green),),trailing: Icon(Icons.info),iconColor: Colors.green, ),
-                  ListTile(title: Text("Delete", style: TextStyle(color: Colors.green),),trailing: Icon(Icons.delete),iconColor: Colors.green,)
+                  ListTile(title: Text("Update",
+                   style: TextStyle(color: Colors.green),),
+                   trailing: Icon(Icons.update),iconColor: Colors.green,
+                   onTap: (){
+                    //Update function
+                    
+                    DisplayDialogue();
+                   },
+                   
+                    ),
+                  ListTile(title: Text("Delete",
+                   style: TextStyle(color: Colors.green),),
+                   trailing: Icon(Icons.delete),iconColor: Colors.green,
+                   onTap: (){
+                    // Delete
+                    Provider.of<NotesProvider>(context).deletelist(currentnote);
+                   },
+                   )
 
                 ],
               ),
@@ -181,7 +213,7 @@ Provider.of<NotesProvider>(context ,listen: false).addlist(Newnote);
         itemCount: notespro.notes.length,
         )),
        floatingActionButton: FloatingActionButton(onPressed: (){
-        return DisplayDialogue();
+       return DisplayDialogue();
        }, child: Icon(Icons.add), backgroundColor: Colors.green,),
     );
   }
