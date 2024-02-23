@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   late bool isUpdate;
   TextEditingController HeadingController = TextEditingController();
   TextEditingController DescriptionController = TextEditingController();
+ 
 void addNote(){
 
     notemod newnote = notemod(
@@ -33,14 +34,15 @@ void addNote(){
         Navigator.pop(context);
   }
 
+// ignore: non_constant_identifier_names
 void DisplayDialogue(){
     showDialog(context: context
     , builder: (context){
 return  Dialog(child: Container(
   
   
-  padding: EdgeInsets.all(10),
-  decoration: BoxDecoration(
+  padding: const EdgeInsets.all(10),
+  decoration: const BoxDecoration(
     borderRadius: BorderRadius.all(Radius.circular(10)),
     color: Colors.black, 
     boxShadow: [
@@ -54,31 +56,35 @@ return  Dialog(child: Container(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       
       children: [
-      Title(color: Colors.white, child: Text("Add Note" , style: TextStyle(color: Colors.green,fontSize: 25),)),
-      SizedBox(width: 125),
+      Title(color: Colors.white, child: const Text("Add Note" , style: TextStyle(color: Colors.green,fontSize: 25),)),
+      const SizedBox(width: 125),
       IconButton(onPressed: (){
         addNote();
-      }, icon: Icon(Icons.done , color: Colors.green,size: 28,))
+      }, icon: const Icon(Icons.done , color: Colors.green,size: 28,))
     ],),
     TextField(
 controller: HeadingController,
       cursorColor: Colors.green,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
+      
+      // ignore: prefer_const_constructors
       decoration: InputDecoration(
-        labelText: "Add title",
-        labelStyle: TextStyle(color: Colors.white) ,
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
+        labelText:  "Add title",
+        labelStyle: const TextStyle(color: Colors.white) ,
+        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
+        enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
         
         
         
       ),
     ),
-    SizedBox(height: 28,),
+    
+    const SizedBox(height: 28,),
     TextField(
       controller: DescriptionController,
-      style: TextStyle(color: Colors.white),
-      decoration: InputDecoration(
+
+      style: const TextStyle(color: Colors.white),
+      decoration: const InputDecoration(
         hintText: "Description",
         hintStyle: TextStyle(color: Colors.white),
         border: InputBorder.none
@@ -92,6 +98,8 @@ controller: HeadingController,
 
   ],),),);
     });
+    HeadingController.clear();
+    DescriptionController.clear();
   }
 
 
@@ -105,7 +113,9 @@ controller: HeadingController,
     return  Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        
         backgroundColor: Colors.black45,
+        iconTheme: IconThemeData(color: Colors.blueGrey),
         title: const Row(
         children: [
           Text("Notes",style: TextStyle(color: Colors.blueGrey),),
@@ -116,7 +126,7 @@ controller: HeadingController,
 
                                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
-                                      mainAxisExtent: 150
+                                      mainAxisExtent: 100
                                     ),
        itemBuilder: (context,index){
         notemod currentnote = notesProvider.notes[index];
@@ -125,86 +135,98 @@ controller: HeadingController,
             HeadingController.text = currentnote.title!;
             DescriptionController.text = currentnote.Description!;
             showBottomSheet(context: context, builder: (context){
+              
         return Container(
+          decoration: BoxDecoration(
+            color: Colors.black
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            
             children: [
+              
               ListTile(
-                title: Text("Update"), 
+                title: Text("Update" , style: TextStyle(color: Colors.green),), 
                 onTap: () {
-  notesProvider.updatelist(currentnote);
-
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Colors.black,
-            boxShadow: [
-              BoxShadow(blurStyle: BlurStyle.inner, blurRadius: 5, spreadRadius: 10, color: Colors.grey),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Title(
-                    color: Colors.white,
-                    child: Text("UpdateNote", style: TextStyle(color: Colors.green, fontSize: 20)),
+            notesProvider.updatelist(currentnote);
+          Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (context) {
+                return GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Dialog(
+                    child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              color: Colors.black,
+                              boxShadow: [
+                                BoxShadow(blurStyle: BlurStyle.inner, blurRadius: 5, spreadRadius: 10, color: Colors.grey),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Title(
+                      color: Colors.white,
+                      child: const Text("UpdateNote", style: TextStyle(color: Colors.green, fontSize: 20)),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        
+                        currentnote.title = HeadingController.text.trim().toString();
+                            
+                        
+                        Provider.of<NotesProvider>(context, listen: false).updatelist(currentnote);
+                        
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.done, color: Colors.green, size: 28),
+                    ),
+                  ],
+                                ),
+                                TextField(
+                  controller: HeadingController,
+                  cursorColor: Colors.green,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
+                    labelText: "Add title",
+                    labelStyle: TextStyle(color: Colors.white),
+                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
+                    enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      // Update the title in the currentnote with the new value
-                      currentnote.title = HeadingController.text.trim().toString();
-
-                      // Update the note in the provider
-                      Provider.of<NotesProvider>(context, listen: false).updatelist(currentnote);
-                      
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(Icons.done, color: Colors.green, size: 28),
+                                ),
+                                const SizedBox(height: 28,),
+                                TextField(
+                  controller: DescriptionController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
+                    hintText: "Description",
+                    hintStyle: TextStyle(color: Colors.white),
+                    border: InputBorder.none,
                   ),
-                ],
-              ),
-              TextField(
-                controller: HeadingController,
-                cursorColor: Colors.green,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: "Add title",
-                  labelStyle: TextStyle(color: Colors.white),
-                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
-                ),
-              ),
-              SizedBox(height: 28,),
-              TextField(
-                controller: DescriptionController,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: "Description",
-                  hintStyle: TextStyle(color: Colors.white),
-                  border: InputBorder.none,
-                ),
-                maxLines: 5,
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-},
-
+                  maxLines: 5,
+                                ),
+                              ],
+                            ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+          
               ),
               ListTile(
-                title: Text("Delete"),
+                title: Text("Delete", style: TextStyle(color: Colors.green),),
                 onTap: (){
                   notesProvider.deletelist(currentnote);
+                  Navigator.pop(context);
                 },
               )
             ],
@@ -213,20 +235,37 @@ controller: HeadingController,
       });
           },
           child: Container(
-            height: 300,
+            height: 200,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blueGrey),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 2,
+                  spreadRadius: 2,
+                  blurStyle: BlurStyle.outer,
+                  color: Colors.blueGrey
+                )
+              ]
+            ),
+            margin: const EdgeInsets.all(10),
+            
             
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              
               children: [
+               
                 
-                
-                Text(currentnote.title! ,style: TextStyle(fontSize: 28 , color: Colors.white), overflow: TextOverflow.ellipsis,maxLines: 2,),
-                SizedBox(height: 7,),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(currentnote.title! ,style: const TextStyle(fontSize: 28 , color: Color.fromARGB(255, 149, 176, 188)),
+                   overflow: TextOverflow.ellipsis,maxLines: 2),
+                ),
+                const SizedBox(height: 7,),
               
                 
               ],
             ),
-            margin: const EdgeInsets.all(10),
-            color: Colors.blueGrey,
           ),
         );
        },
@@ -234,8 +273,10 @@ controller: HeadingController,
        
        )),
       floatingActionButton: FloatingActionButton(onPressed: (){
+        
+        
         DisplayDialogue();
-      }, child: Icon(Icons.add),),
+      }, child:  Icon(Icons.add  ), backgroundColor: Colors.green,),  
     );
   }
 }
